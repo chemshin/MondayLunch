@@ -369,8 +369,10 @@ function renderStats(){
 
   const roundsOf={}; state.roster.forEach(m=>roundsOf[m.name]=[]);
   held.forEach(w=>attList(w).forEach(n=>{ if(roundsOf[n]) roundsOf[n].push(w.round); }));
-  const cnt=name=>(roundsOf[name]||[]).length;
-  const maxCount=Math.max(1,...state.roster.map(m=>cnt(m.name)));
+  // 참석 횟수는 '출석부'의 참석횟수 값을 그대로 사용 (참석 회차 칩은 스케줄 기준)
+  const countByName={}; state.roster.forEach(m=>countByName[m.name]=m.count||0);
+  const cnt=name=>countByName[name]||0;
+  const maxCount=Math.max(1,...state.roster.map(m=>m.count||0));
 
   const countCell=c=>`<div class="count-cell"><div class="mini"><i style="width:${Math.round((c/maxCount)*100)}%"></i></div><b>${c}회</b></div>`;
   const roundsCell=name=>{
